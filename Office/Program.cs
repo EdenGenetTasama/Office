@@ -9,134 +9,152 @@ namespace Office
 {
     internal class Program
     {
-        List<Employee> employeesList = new List<Employee>();
-        string stringConnection = "Data Source=DESKTOP-0MT6QTG;Initial Catalog=OfficeTeskDb;Integrated Security=True;Pooling=False";
-
-        //AllEmployeesIn(stringConnection);
-
-        //AddingNewEmployee(stringConnection);
-
-        //Console.WriteLine("Please Enter the Id You Like To Update:");
-        //int idFromUserUpdate = int.Parse(Console.ReadLine());
-        //UpdateInTable(idFromUserUpdate, stringConnection);
-
-
-        //Console.WriteLine("Please Enter the Id You Like To Delete:");
-        //int idFromUserDelete = int.Parse(Console.ReadLine());
-        //DeleteFromTable(idFromUserDelete, stringConnection);
-
-    }
-
-
-    private static void AllEmployeesIn(string stringConnection)
-    {
-        try
+        static void Main(string[] args)
         {
+            List<Employee> employeesList = new List<Employee>();
+            string stringConnection = "Data Source=DESKTOP-0MT6QTG;Initial Catalog=OfficeTeskDb;Integrated Security=True;Pooling=False";
 
-            using (SqlConnection connection = new SqlConnection(stringConnection))
+            //AllEmployeesIn(stringConnection);
+
+            //AddingNewEmployee(stringConnection);
+
+            //Console.WriteLine("Please Enter the Id You Like To Update:");
+            //int idFromUserUpdate = int.Parse(Console.ReadLine());
+            UpdateInTable(stringConnection);
+
+
+            //Console.WriteLine("Please Enter the Id You Like To Delete:");
+            //int idFromUserDelete = int.Parse(Console.ReadLine());
+            //DeleteFromTable(idFromUserDelete, stringConnection);
+
+            Console.ReadLine();
+        }
+
+
+
+
+        private static void AllEmployeesIn(string stringConnection)
+        {
+            try
             {
-                string query = "SELECT * FROM Employee";
-                connection.Open();
-                SqlCommand commend = new SqlCommand(query, connection);
-                SqlDataReader reader = commend.ExecuteReader();
-                while (reader.Read())
+
+                using (SqlConnection connection = new SqlConnection(stringConnection))
                 {
-                    Console.WriteLine($"{reader.GetString(1)} , {reader.GetString(2)} , {reader.GetString(3)},{reader.GetInt32(4)}");
+                    string query = "SELECT * FROM Employee";
+                    connection.Open();
+                    SqlCommand commend = new SqlCommand(query, connection);
+                    SqlDataReader reader = commend.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($"{reader.GetString(1)} , {reader.GetString(2)} , {reader.GetString(3)},{reader.GetInt32(4)}");
+                    }
+                    connection.Close();
                 }
-                connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
-        catch (SqlException ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-    }
 
-    private static void AddingNewEmployee(string stringConnection)
-    {
-        try
+        private static void AddingNewEmployee(string stringConnection)
         {
-
-            Console.WriteLine("Enter fullName , yearOfBirth ,email, payment");
-            string fullName = Console.ReadLine();
-            string yearOfBirth = Console.ReadLine();
-            string email = Console.ReadLine();
-            int payment = int.Parse(Console.ReadLine());
-
-            using (SqlConnection connection = new SqlConnection(stringConnection))
+            try
             {
 
-                string query = $@"INSERT INTO Employee(name , dateOfBirth , email , payment) values('{fullName}','{yearOfBirth}','{email}',{payment})";
-                connection.Open();
-                SqlCommand commend = new SqlCommand(query, connection);
-                int addToTable = commend.ExecuteNonQuery();
-                connection.Close();
+                Console.WriteLine("Enter fullName , yearOfBirth ,email, payment");
+                string fullName = Console.ReadLine();
+                string yearOfBirth = Console.ReadLine();
+                string email = Console.ReadLine();
+                int payment = int.Parse(Console.ReadLine());
+
+                using (SqlConnection connection = new SqlConnection(stringConnection))
+                {
+
+                    string query = $@"INSERT INTO Employee(name , dateOfBirth , email , payment) values('{fullName}','{yearOfBirth}','{email}',{payment})";
+                    connection.Open();
+                    SqlCommand commend = new SqlCommand(query, connection);
+                    int addToTable = commend.ExecuteNonQuery();
+                    connection.Close();
+                }
             }
-        }
-        catch (SqlException ex)
-        {
-            Console.WriteLine(ex.Message);
-
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-
-
-    }
-
-    private static void UpdateInTable(int id, string stringConnection)
-    {
-
-
-        Console.WriteLine("Enter fullName , yearOfBirth ,email, payment");
-        string fullName = Console.ReadLine();
-        string yearOfBirth = Console.ReadLine();
-        string email = Console.ReadLine();
-        int payment = int.Parse(Console.ReadLine());
-        using (SqlConnection connection = new SqlConnection())
-        {
-            connection.Open();
-            string query = $@"UPDATE Employee SET id = '{id}' name = '{fullName}' dateOfBirth = '{yearOfBirth}' email = '{email}' payment = '{payment}', WHERE Employee.id = { id}";
-            SqlCommand commend = new SqlCommand(query, connection);
-            int updatToTable = commend.ExecuteNonQuery();
-            connection.Close();
-        }
-
-
-    }
-
-    private static void DeleteFromTable(int id, string stringConnection)
-    {
-        try
-        {
-
-            using (SqlConnection connection = new SqlConnection(stringConnection))
+            catch (SqlException ex)
             {
-                connection.Open();
-                string query = $@"DELETE FROM Employee WHERE Employee.Id = {id}";
-                SqlCommand commend = new SqlCommand(query, connection);
-                int delete = commend.ExecuteNonQuery();
-                connection.Close();
+                Console.WriteLine(ex.Message);
 
             }
-        }
-        catch (SqlException ex)
-        {
-            Console.WriteLine(ex.Message);
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
 
         }
-        catch (Exception ex)
+
+        private static void UpdateInTable(string stringConnection)
         {
-            Console.WriteLine(ex.Message);
+
+            try
+            {
+
+                Console.WriteLine("Enter fullName , yearOfBirth ,email, payment");
+                string fullName = Console.ReadLine();
+                string yearOfBirth = Console.ReadLine();
+                string email = Console.ReadLine();
+                int payment = int.Parse(Console.ReadLine());
+                int idFromUser = int.Parse(Console.ReadLine());
+
+                using (SqlConnection connection = new SqlConnection(stringConnection))
+                {
+                    connection.Open();
+                    string query = $@"UPDATE Employee SET name = '{fullName}', dateOfBirth = '{yearOfBirth}', email = '{email}', payment = {payment} WHERE Id = {idFromUser}";
+                    SqlCommand commend = new SqlCommand(query, connection);
+                    int updatToTable = commend.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch(SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch(Exception ex) {
+                Console.WriteLine(ex.Message);
+            }
+
+
         }
+
+        private static void DeleteFromTable(int id, string stringConnection)
+        {
+            try
+            {
+
+                using (SqlConnection connection = new SqlConnection(stringConnection))
+                {
+                    connection.Open();
+                    string query = $@"DELETE FROM Employee WHERE Employee.Id = {id}";
+                    SqlCommand commend = new SqlCommand(query, connection);
+                    int delete = commend.ExecuteNonQuery();
+                    connection.Close();
+
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
     }
-
 }
 
 
